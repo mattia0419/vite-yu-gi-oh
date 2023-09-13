@@ -1,13 +1,15 @@
 <script>
+import { store } from './data/store';
 import CardsList from './components/CardsList.vue';
 export default {
   data() {
     return {
-
+      store,
     }
   },
   components: {
-    CardsList
+    CardsList,
+
   },
 
 }
@@ -17,6 +19,7 @@ export default {
 
 <template>
   <main class="container">
+
     <CardsList></CardsList>
   </main>
 </template>
