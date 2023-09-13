@@ -8,7 +8,9 @@ export default {
             cards: [],
             activePage: 0,
             apiUri: 'https://db.ygoprodeck.com/api/v7/cardinfo.php?num=20&offset=',
-
+            archeTypes: [],
+            apiUriArchetypes: 'https://db.ygoprodeck.com/api/v7/archetypes.php',
+            type: ''
         }
     },
 
@@ -19,8 +21,18 @@ export default {
                 console.log(this.cards);
             })
         },
-        next() {
+        fetchArchetypes(endPoint) {
+            axios.get(endPoint).then((response) => {
+                for (let i = 0; i < 10; i++) {
+                    this.archeTypes.push(response.data[i].archetype_name);
+                    console.log(this.archeTypes);
+                }
 
+
+
+            })
+        },
+        next() {
             const nextPage = this.activePage + 20;
             this.activePage = nextPage;
             console.log(this.activePage);
@@ -41,6 +53,7 @@ export default {
     },
     created() {
         this.fetchCards(this.apiUri);
+        this.fetchArchetypes(this.apiUriArchetypes);
     },
     components: {
         Card
@@ -51,12 +64,15 @@ export default {
 
 <template>
     <div>
+        <select name="select" v-model="type" @change="">
+            <option v-for="archetype in archeTypes" :value="archetype">{{ archetype }}</option>
+        </select>
         <button class="btn btn-primary m-3" @click="prev()">Prev</button>
         <button class="btn btn-primary m-3" @click="next()">Next</button>
         <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-lg-4">
 
             <Card v-for="card in cards" :name="card.name" :type="card.archetype"
-                :image="card.card_images[0].image_url_small" class="col bg-orange"></Card>
+                :image="card.card_images[0].image_url_cropped" class="col bg-orange"></Card>
 
         </div>
     </div>
