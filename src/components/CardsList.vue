@@ -1,7 +1,7 @@
 <script>
 import Card from './Card.vue';
 import axios from 'axios';
-
+import BaseSelect from './BaseSelect.vue';
 export default {
     data() {
         return {
@@ -10,7 +10,8 @@ export default {
             apiUri: 'https://db.ygoprodeck.com/api/v7/cardinfo.php?num=20&offset=',
             archeTypes: [],
             apiUriArchetypes: 'https://db.ygoprodeck.com/api/v7/archetypes.php',
-            type: ''
+            type: '',
+            uriCardsFilter: 'https://db.ygoprodeck.com/api/v7/cardinfo.php?archetype='
         }
     },
 
@@ -49,6 +50,10 @@ export default {
                 return;
             }
 
+        },
+        filterCards(term) {
+            console.log('app ha ricevuto' + term);
+            this.fetchCards(this.uriCardsFilter + term)
         }
     },
     created() {
@@ -56,7 +61,8 @@ export default {
         this.fetchArchetypes(this.apiUriArchetypes);
     },
     components: {
-        Card
+        Card,
+        BaseSelect
     }
 
 }
@@ -64,9 +70,7 @@ export default {
 
 <template>
     <div>
-        <select name="select" v-model="type" @change="">
-            <option v-for="archetype in archeTypes" :value="archetype">{{ archetype }}</option>
-        </select>
+        <BaseSelect :data="archeTypes" @change-selection="filterCards"></BaseSelect>
         <button class="btn btn-primary m-3" @click="prev()">Prev</button>
         <button class="btn btn-primary m-3" @click="next()">Next</button>
         <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-lg-4">
